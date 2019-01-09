@@ -16,7 +16,6 @@ import com.intellij.util.containers.Stack;
 import kotlin.Pair;
 import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
-import kotlin.jvm.functions.Function1;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.backend.common.CodegenUtil;
@@ -1435,23 +1434,15 @@ public class ExpressionCodegen extends KtVisitor<StackValue, StackValue> impleme
     }
 
     public <T> T runWithMarkLineNumber(boolean disable, Supplier<T> operation) {
-        boolean originalStatus = isShouldMarkLineNumbers();
-        setShouldMarkLineNumbers(disable);
+        boolean originalStatus = shouldMarkLineNumbers;
+        this.shouldMarkLineNumbers = disable;
         T result;
         try {
             result = operation.get();
         } finally {
-            setShouldMarkLineNumbers(originalStatus);
+            this.shouldMarkLineNumbers = originalStatus;
         }
         return result;
-    }
-
-    public boolean isShouldMarkLineNumbers() {
-        return shouldMarkLineNumbers;
-    }
-
-    public void setShouldMarkLineNumbers(boolean shouldMarkLineNumbers) {
-        this.shouldMarkLineNumbers = shouldMarkLineNumbers;
     }
 
     public void markStartLineNumber(@NotNull KtElement element) {
