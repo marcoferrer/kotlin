@@ -1433,9 +1433,9 @@ public class ExpressionCodegen extends KtVisitor<StackValue, StackValue> impleme
         });
     }
 
-    public <T> T runWithMarkLineNumber(boolean disable, Supplier<T> operation) {
+    public <T> T runWithMarkLineNumber(boolean enable, Supplier<T> operation) {
         boolean originalStatus = shouldMarkLineNumbers;
-        this.shouldMarkLineNumbers = disable;
+        this.shouldMarkLineNumbers = enable;
         T result;
         try {
             result = operation.get();

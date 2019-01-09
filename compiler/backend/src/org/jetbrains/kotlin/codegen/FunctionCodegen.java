@@ -1314,7 +1314,7 @@ public class FunctionCodegen {
                 Label loadArg = new Label();
                 iv.ifeq(loadArg);
 
-                codegen.runWithMarkLineNumber(parameterDescriptor.getContainingDeclaration() != functionDescriptor, () -> {
+                codegen.runWithMarkLineNumber(parameterDescriptor.getContainingDeclaration() == functionDescriptor, () -> {
                     StackValue.local(parameterIndex, type, parameterDescriptor.getType())
                             .store(loadStrategy.genValue(parameterDescriptor, codegen), iv);
                     return null;
