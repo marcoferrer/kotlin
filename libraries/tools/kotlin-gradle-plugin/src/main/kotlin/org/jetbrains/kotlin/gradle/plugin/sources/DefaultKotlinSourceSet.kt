@@ -20,11 +20,12 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.DefaultKotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.utils.isGradleVersionAtLeast
 import org.jetbrains.kotlin.gradle.utils.lowerCamelCaseName
 import java.lang.reflect.Constructor
+import javax.inject.Inject
 import java.util.*
 
 const val METADATA_CONFIGURATION_NAME_SUFFIX = "DependenciesMetadata"
 
-class DefaultKotlinSourceSet(
+open class DefaultKotlinSourceSet @Inject constructor(
     private val project: Project,
     val displayName: String,
     fileResolver: FileResolver
