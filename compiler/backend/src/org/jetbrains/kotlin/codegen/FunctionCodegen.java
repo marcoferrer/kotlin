@@ -6,6 +6,7 @@
 package org.jetbrains.kotlin.codegen;
 
 import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ArrayUtil;
 import kotlin.collections.CollectionsKt;
@@ -1313,8 +1314,11 @@ public class FunctionCodegen {
                 Label loadArg = new Label();
                 iv.ifeq(loadArg);
 
-                StackValue.local(parameterIndex, type, parameterDescriptor.getType())
-                        .store(loadStrategy.genValue(parameterDescriptor, codegen), iv);
+                codegen.runWithMarkLineNumber(parameterDescriptor.getContainingDeclaration() != functionDescriptor, () -> {
+                    StackValue.local(parameterIndex, type, parameterDescriptor.getType())
+                            .store(loadStrategy.genValue(parameterDescriptor, codegen), iv);
+                    return null;
+                });
 
                 iv.mark(loadArg);
             }

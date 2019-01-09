@@ -16,6 +16,7 @@ import com.intellij.util.containers.Stack;
 import kotlin.Pair;
 import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
+import kotlin.jvm.functions.Function1;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.backend.common.CodegenUtil;
@@ -89,6 +90,7 @@ import org.jetbrains.org.objectweb.asm.commons.InstructionAdapter;
 import org.jetbrains.org.objectweb.asm.commons.Method;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 import static org.jetbrains.kotlin.builtins.KotlinBuiltIns.isInt;
 import static org.jetbrains.kotlin.codegen.AsmUtil.*;
@@ -1430,6 +1432,18 @@ public class ExpressionCodegen extends KtVisitor<StackValue, StackValue> impleme
             v.visitLocalVariable(functionDescriptor.getName().asString() + "$", type.getDescriptor(), null, scopeStart, blockEnd, index);
             return null;
         });
+    }
+
+    public <T> T runWithMarkLineNumber(boolean disable, Supplier<T> operation) {
+        boolean originalStatus = isShouldMarkLineNumbers();
+        setShouldMarkLineNumbers(disable);
+        T result;
+        try {
+            result = operation.get();
+        } finally {
+            setShouldMarkLineNumbers(originalStatus);
+        }
+        return result;
     }
 
     public boolean isShouldMarkLineNumbers() {
